@@ -1,9 +1,8 @@
-% Mortar: A Solid Foundation for Software Projects
-% Dustin Morrill
-% July 21, 2015
+Mortar: A Solid Foundation for Software Projects
+================================================
 
 What is Mortar?
-===============
+---------------
 
 Many programming environments have dependency managers for their own libraries, such as *Bundler* for Ruby, *Pip* for Python, *Node Package Manager* for Node, and others. A problem arises however, if one needs to use packages from many environments, those that are in any dependency manager's library, or those written in languages that lack widespread dependency manager support such as C and C++.
 
@@ -17,19 +16,19 @@ Its possible that there are tools in existence that do exactly this, but I have 
 
 
 Supported Systems
-=================
+-----------------
 
 Currently only targeted for Linux, and only tested on Ubuntu.
 
 
 Requirements
-============
+------------
 
 - Ruby (>= 2.0)
 
 
 Usage
-=====
+-----
 
 1. Install `mortar` gem with `gem install mortar`
 2. Write a `Brickfile.yml` in your project's root directory that has the following fields:
@@ -47,7 +46,7 @@ Usage
 
 
 Settings
-========
+--------
 
 Write a `$HOME/.mortarrc` file to specify:
 
@@ -62,7 +61,7 @@ Write a `$HOME/.mortarrc` file to specify:
 
 
 License
-=======
+-------
 
 Copyright Dustin Morrill, 2015
 
