@@ -24,7 +24,7 @@ Currently only targeted for Linux, and only tested on Ubuntu.
 Requirements
 ------------
 
-- Ruby (>= 2.0)
+- Ruby (>= 1.8.7)
 
 
 Usage
