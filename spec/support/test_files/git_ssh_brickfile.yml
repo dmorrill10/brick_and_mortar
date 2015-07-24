@@ -1,0 +1,6 @@
+- 
+  name: mortar
+  version: 0.0.1
+  location: 
+    method: git
+    url: git@github.com:dmorrill10/mortar.git 
