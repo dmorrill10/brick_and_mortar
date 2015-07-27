@@ -1,16 +1,52 @@
-require "mortar/version"
+require 'mortar/version'
 
-
+require 'yaml'
 
 module Mortar
-  # Your code goes here...
+  class Location
+    attr_reader :method, :url, :path
+
+    def initialize(data)
+      @url = data['url'] if data['url']
+      @path = data['path'] if data['path']
+      @method = data['method'] if data['method']
+      if data.respond_to?(:match) && data.match(/^\s*https?:/)
+        @url = data['url']
+        @method = 'download'
+      elsif @url.nil? && @path.nil?
+        @path = data['path']
+        @method = 'copy'
+      end
+      fail 'Must have a path or URL' unless @path || @url
+    end
+  end
+  class Config
+    attr_reader :name, :version, :location
+
+    def initialize(data)
+      @name = data['name']
+      @version = data['version']
+      @location = Location.new(data['location'])
+    end
+  end
+  def self.parse(yaml)
+    YAML.load(yaml).map do |data|
+      Config.new(data)
+    end
+  end
+
+  def self.parse_file(yaml_file)
+    YAML.load_file(yaml_file).map do |data|
+      Config.new(data)
+    end
+  end
 end
 
 # @todo This should be helpful
-#require 'pathname'
-#require 'yaml'
-#require 'fileutils'
-#require 'rake'
+# require 'pathname'
+# require 'yaml'
+# require 'fileutils'
+# require 'rake'
 #
 #    def self.ensure_directory_present(dir)
 #      FileUtils.mkpath dir unless File.exists? dir

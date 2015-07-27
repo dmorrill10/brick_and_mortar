@@ -13,4 +13,3 @@ begin
   end
 rescue LoadError
 end
-
