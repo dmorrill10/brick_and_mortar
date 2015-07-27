@@ -13,3 +13,5 @@ begin
   end
 rescue LoadError
 end
+
+require_relative 'mocks'

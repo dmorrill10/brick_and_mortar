@@ -71,5 +71,7 @@ describe Mortar do
     end
 
     # @todo Copy the above tests, but for svn, url, hg, and local project configurations (see support/test_files for example configurations)
+
+    # @todo A little more has to be done for local project, since the path to the local project might have to be relative to the brickfile, so I can do that one
   end
 end

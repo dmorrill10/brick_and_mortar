@@ -2,11 +2,6 @@ require_relative 'support/spec_helper'
 
 require_relative '../lib/mortar/git'
 
-MockBrickConfiguration = Struct.new(:name, :version, :location)
-MockBrickLocation = Struct.new(:method, :path) do
-  alias_method :url, :path
-end
-
 describe Mortar::Git do
   describe 'given git ssh brick configuration' do
     git_ssh_brick_configruation = MockBrickConfiguration.new(
