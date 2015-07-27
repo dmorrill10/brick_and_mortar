@@ -3,41 +3,49 @@ require 'mortar/version'
 require 'yaml'
 
 module Mortar
-  class Location
-    attr_reader :method, :url, :path
+  module Brick
+    class Location
+      attr_reader :method, :path
 
-    def initialize(data)
-      @url = data['url'] if data['url']
-      @path = data['path'] if data['path']
-      @method = data['method'] if data['method']
-      if data.respond_to?(:match) && data.match(/^\s*https?:/)
-        @url = data['url']
-        @method = 'download'
-      elsif @url.nil? && @path.nil?
-        @path = data['path']
-        @method = 'copy'
+      alias_method :url, :path
+
+      def initialize(data)
+        @path = if data['path']
+          data['path']
+        elsif data['url']
+          data['url']
+        end
+        @method = data['method'] if data['method']
+        if data.respond_to?(:match) && data.match(/^\s*https?:/)
+          @path = data['url']
+          @method = 'download'
+        elsif @path.nil?
+          @path = data['path']
+          @method = 'copy'
+        end
+        fail 'Must have a path or URL' unless @path
       end
-      fail 'Must have a path or URL' unless @path || @url
     end
-  end
-  class Config
-    attr_reader :name, :version, :location
+    class Config
+      attr_reader :name, :version, :location
 
-    def initialize(data)
-      @name = data['name']
-      @version = data['version']
-      @location = Location.new(data['location'])
+      def initialize(data)
+        @name = data['name']
+        @version = data['version']
+        @location = Location.new(data['location'])
+      end
     end
   end
+
   def self.parse(yaml)
     YAML.load(yaml).map do |data|
-      Config.new(data)
+      Brick::Config.new(data)
     end
   end
 
   def self.parse_file(yaml_file)
     YAML.load_file(yaml_file).map do |data|
-      Config.new(data)
+      Brick::Config.new(data)
     end
   end
 end
