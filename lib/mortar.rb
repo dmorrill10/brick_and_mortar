@@ -5,24 +5,54 @@ require 'yaml'
 module Mortar
   module Brick
     class Location
-      attr_reader :method, :path
+      attr_reader :method, :path, :format
+
+      FORMATS = {:plain => 'plain', :zip => 'zip', :tar_gz => 'tar.gz'}
+
+      def self.url_to_format(url)
+        if url.match(/\.zip$/)
+          FORMATS[:zip]
+        elsif url.match(/\.tar.gz$/)
+          FORMATS[:tar_gz]
+        else
+          FORMATS[:plain]
+        end
+      end
 
       alias_method :url, :path
 
       def initialize(data)
+        if data['path'] && !data['path'].empty? && data['url'] && data['url'].empty?
+          fail "Path was specified as \"#{data['path']}\", but url was specified as \"#{data['url']}\". Only one can be defined at a time."
+        end
+
+        @format = FORMATS[:plain]
+
+        if data.respond_to?(:match)
+          if data.match(/^\s*svn:/)
+            @method = 'svn'
+          elsif data.match(/^\s*git:/) || data.match(/\.git\s*$/)
+            @method = 'git'
+          elsif data.match(/^\s*https?:/)
+            @method = 'download'
+          end
+          @path = data
+          @format = self.class().url_to_format(data)
+        end
+
         @path = if data['path']
+          @method = 'copy'
+          @format = self.class().url_to_format(data['path'])
           data['path']
         elsif data['url']
+          @format = self.class().url_to_format(data['url'])
           data['url']
+        else
+          @path
         end
         @method = data['method'] if data['method']
-        if data.respond_to?(:match) && data.match(/^\s*https?:/)
-          @path = data['url']
-          @method = 'download'
-        elsif @path.nil?
-          @path = data['path']
-          @method = 'copy'
-        end
+        @format = data['format'] if data['format']
+
         fail 'Must have a path or URL' unless @path
       end
     end
