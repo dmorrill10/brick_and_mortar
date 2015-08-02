@@ -2,80 +2,66 @@ require 'mortar/version'
 
 require 'yaml'
 
+require 'mortar/brick'
+
+require 'fileutils'
+
 module Mortar
-  module Brick
-    class Location
-      attr_reader :method, :path, :format
+  class Config
+    attr_accessor :store
 
-      FORMATS = {:plain => 'plain', :zip => 'zip', :tar_gz => 'tar.gz'}
+    def initialize(store_)
+      @store = store_
+    end
 
-      def self.url_to_format(url)
-        if url.match(/\.zip$/)
-          FORMATS[:zip]
-        elsif url.match(/\.tar.gz$/)
-          FORMATS[:tar_gz]
+    def store_exists?
+      Dir.exist? @store
+    end
+
+    def create_store!
+      unless store_exists?
+        FileUtils.mkpath @store
+        fail "Could not create store at \"#{@store}\"" unless store_exists?
+      end
+    end
+
+    def destroy_store!
+      FileUtils.rm_rf @store
+    end
+
+    alias_method :store_exist?, :store_exists?
+
+    def parse_data(brick_data, store_ = @store)
+      brick_data.map do |brick|
+        Brick::Config.new(brick, store_)
+      end
+    end
+
+    def bricks_and_store_from_data(data)
+      store_ = @store
+      begin
+        brick_data = if data['store'] && !data['store'].empty?
+          store_ = data['store']
+          data['bricks']
+        elsif data['bricks']
+          data['bricks']
         else
-          FORMATS[:plain]
+          []
         end
+      rescue TypeError
+        brick_data = data
       end
-
-      alias_method :url, :path
-
-      def initialize(data)
-        if data['path'] && !data['path'].empty? && data['url'] && data['url'].empty?
-          fail "Path was specified as \"#{data['path']}\", but url was specified as \"#{data['url']}\". Only one can be defined at a time."
-        end
-
-        @format = FORMATS[:plain]
-
-        if data.respond_to?(:match)
-          if data.match(/^\s*svn:/)
-            @method = 'svn'
-          elsif data.match(/^\s*git:/) || data.match(/\.git\s*$/)
-            @method = 'git'
-          elsif data.match(/^\s*https?:/)
-            @method = 'download'
-          end
-          @path = data
-          @format = self.class().url_to_format(data)
-        end
-
-        @path = if data['path']
-          @method = 'copy'
-          @format = self.class().url_to_format(data['path'])
-          data['path']
-        elsif data['url']
-          @format = self.class().url_to_format(data['url'])
-          data['url']
-        else
-          @path
-        end
-        @method = data['method'] if data['method']
-        @format = data['format'] if data['format']
-
-        fail 'Must have a path or URL' unless @path
-      end
+      [brick_data, store_]
     end
-    class Config
-      attr_reader :name, :version, :location
 
-      def initialize(data)
-        @name = data['name']
-        @version = data['version']
-        @location = Location.new(data['location'])
-      end
+    def parse(yaml)
+      brick_data, store_ = bricks_and_store_from_data YAML.load(yaml)
+      parse_data brick_data, store_
     end
-  end
 
-  def self.parse(yaml)
-    YAML.load(yaml).map do |data|
-      Brick::Config.new(data)
-    end
-  end
-
-  def self.parse_file(yaml_file)
-    YAML.load_file(yaml_file).map do |data|
-      Brick::Config.new(data)
+    def parse_file(yaml_file)
+      brick_data, store_ = bricks_and_store_from_data YAML.load_file(yaml_file)
+      parse_data brick_data, store_
     end
   end
 end
