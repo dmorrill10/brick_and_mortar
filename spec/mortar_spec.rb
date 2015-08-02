@@ -2,6 +2,30 @@ require_relative 'support/spec_helper'
 
 require_relative '../lib/mortar'
 
+module Mortar
+  module Git
+    def self.clone_repo(url, name = nil, options = {})
+      unless name
+        name = File.basename(url, File.extname(url))
+      end
+      FileUtils.mkpath name
+    end
+  end
+  module Svn
+    def self.checkout_repo(url, name = nil, options = {})
+      unless name
+        split_url = url.split '/'
+        name = if split_url.last == 'trunk'
+          split_url.last
+        else
+          split_url[-2]
+        end
+      end
+      FileUtils.mkpath name
+    end
+  end
+end
+
 BRICK_STORE = File.expand_path('../.test_brick_store', __FILE__)
 
 def test_git_https_config(patient)

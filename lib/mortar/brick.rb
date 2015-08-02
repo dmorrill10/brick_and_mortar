@@ -2,6 +2,8 @@ require_relative 'git'
 require_relative 'svn'
 # require_relative 'url'
 
+require 'pry'
+
 module Mortar
   module Brick
     class Location
@@ -109,14 +111,7 @@ module Mortar
       end
 
       def destroy!
-        puts "Destroying #{@destination}"
-        begin
-          FileUtils.rm_rf @destination, {:secure => true}
-        rescue => e
-          puts "  Error: #{e.message}"
-          raise e
-        end
-        puts "  Exists: #{File.exist?(@destination)}, exists: #{exists?}"
+        FileUtils.rm_rf @destination, {:secure => true}
       end
     end
   end
