@@ -1,8 +1,6 @@
 require_relative 'git'
 require_relative 'svn'
-# require_relative 'url'
-
-require 'pry'
+require_relative 'download'
 
 module Mortar
   module Brick
@@ -89,6 +87,19 @@ module Mortar
                 puts "Installing #{@name_with_version} to #{@destination} from #{@location.path} with svn"
               end
               Svn.checkout_repo(@location.path, @destination)
+            else
+              if verbose
+                puts "Using #{@name_with_version} in #{@destination}"
+              end
+            end
+          end
+        when 'download'
+          -> do
+            if !exists?
+              if verbose
+                puts "Installing #{@name_with_version} to #{@destination} from #{@location.path}"
+              end
+              Download.get_and_unpack_zip(@location.path, @destination)
             else
               if verbose
                 puts "Using #{@name_with_version} in #{@destination}"

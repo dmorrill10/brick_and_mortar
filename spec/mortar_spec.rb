@@ -3,6 +3,14 @@ require_relative 'support/spec_helper'
 require_relative '../lib/mortar'
 
 module Mortar
+  module Download
+    def self.get_and_unpack_zip(url, name = nil, options = {})
+      unless name
+        name = File.basename(url, File.extname(url))
+      end
+      FileUtils.mkpath name
+    end
+  end
   module Git
     def self.clone_repo(url, name = nil, options = {})
       unless name
@@ -70,9 +78,8 @@ def test_zip_url_config(patient)
   File.basename(patient[0].destination).must_equal 'mortar-0.0.1'
   patient[0].destination.must_equal File.join(BRICK_STORE, 'mortar-0.0.1')
   patient[0].exists?.must_equal false
-  # @todo
-  # patient[0].create!
-  # patient[0].exists?.must_equal true
+  patient[0].create!
+  patient[0].exists?.must_equal true
 end
 
 def test_tar_gz_url_config(patient, brick_store = BRICK_STORE)

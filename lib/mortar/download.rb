@@ -3,10 +3,6 @@ require 'zip'
 
 module Mortar
   module Download
-    def self.get(url)
-      puts "  Url: #{url}"
-      open(url).read
-    end
     def self.unzip(zip_file)
       root_dir_name = nil
       Zip::File.open(zip_file) do |z|
