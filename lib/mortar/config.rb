@@ -28,7 +28,7 @@ module Mortar
 
     alias_method :store_exist?, :store_exists?
 
-    def parse_data(brick_data, store_ = @store)
+    def parse_data!(brick_data, store_ = @store)
       brick_data.map do |brick|
         Brick::Config.new(brick, store_)
       end
@@ -51,14 +51,14 @@ module Mortar
       [brick_data, store_]
     end
 
-    def parse(yaml)
+    def parse!(yaml)
       brick_data, store_ = bricks_and_store_from_data YAML.load(yaml)
-      parse_data brick_data, store_
+      parse_data! brick_data, store_
     end
 
-    def parse_file(yaml_file)
+    def parse_file!(yaml_file)
       brick_data, store_ = bricks_and_store_from_data YAML.load_file(yaml_file)
-      parse_data brick_data, store_
+      parse_data! brick_data, store_
     end
   end
 end

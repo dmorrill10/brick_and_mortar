@@ -27,7 +27,7 @@ describe Mortar::Project do
     patient.laid?.must_equal false
     patient.project_root.must_equal project_root
     patient.vendor.must_equal project_vendor
-    patient.lay
+    patient.lay!
     patient.laid?.must_equal true
     File.exist?(project_vendor).must_equal true
   end

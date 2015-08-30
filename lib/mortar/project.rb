@@ -10,7 +10,7 @@ module Mortar
     def initialize(brickfile, brick_store = DEFAULT_BRICK_STORE)
       @config = Config.new brick_store
       @config.create_store!
-      @bricks = @config.parse_file brickfile
+      @bricks = @config.parse_file! brickfile
       @project_root = File.dirname(brickfile)
     end
 
@@ -25,7 +25,7 @@ module Mortar
       end
     end
 
-    def lay
+    def lay!
       FileUtils.mkpath vendor
       @bricks.each { |b| b.lay! vendor }
     end

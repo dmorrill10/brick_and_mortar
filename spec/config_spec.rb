@@ -104,12 +104,12 @@ describe Mortar::Config do
     method: git
     url: https://github.com/dmorrill10/mortar.git
 END
-        test_git_https_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        test_git_https_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
 
       it 'from file' do
         test_git_https_config(
-          Mortar::Config.new(BRICK_STORE).parse_file(
+          Mortar::Config.new(BRICK_STORE).parse_file!(
             File.expand_path(
               '../support/test_files/git_https_brickfile.yml',
               __FILE__
@@ -125,7 +125,7 @@ END
   version: 0.0.1
   location: https://github.com/dmorrill10/mortar.git
 END
-        test_git_https_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        test_git_https_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
     end
 
@@ -139,12 +139,12 @@ END
       method: git
       url: git@github.com:dmorrill10/mortar.git
   END
-        test_git_ssh_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        test_git_ssh_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
 
       it 'from file' do
         test_git_ssh_config(
-          Mortar::Config.new(BRICK_STORE).parse_file(
+          Mortar::Config.new(BRICK_STORE).parse_file!(
             File.expand_path(
               '../support/test_files/git_ssh_brickfile.yml',
               __FILE__
@@ -160,7 +160,7 @@ END
     version: 0.0.1
     location: git@github.com:dmorrill10/mortar.git
   END
-        test_git_ssh_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        test_git_ssh_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
     end
 
@@ -174,7 +174,7 @@ END
     method: svn
     url: https://github.com/dmorrill10/mortar
 END
-        patient = Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        patient = Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
         patient.length.must_equal 1
         patient[0].name.must_equal 'mortar'
         patient[0].version.must_equal '0.0.1'
@@ -191,7 +191,7 @@ END
       end
 
       it 'from file' do
-        patient = Mortar::Config.new(BRICK_STORE).parse_file(
+        patient = Mortar::Config.new(BRICK_STORE).parse_file!(
           File.expand_path(
             '../support/test_files/svn_brickfile.yml',
             __FILE__
@@ -219,7 +219,7 @@ END
   version: 0.0.1
   location: svn://github.com/dmorrill10/mortar
 END
-        patient = Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        patient = Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
         patient.length.must_equal 1
         patient[0].name.must_equal 'mortar'
         patient[0].version.must_equal '0.0.1'
@@ -244,12 +244,12 @@ END
   version: 0.0.1
   location: https://github.com/dmorrill10/mortar/archive/master.zip
 END
-        test_zip_url_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        test_zip_url_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
 
       it 'from file' do
         test_zip_url_config(
-          Mortar::Config.new(BRICK_STORE).parse_file(
+          Mortar::Config.new(BRICK_STORE).parse_file!(
             File.expand_path(
               '../support/test_files/url_brickfile.yml',
               __FILE__
@@ -267,7 +267,7 @@ END
   version: 0.0.1
   location: https://github.com/dmorrill10/mortar/archive/master.tar.gz
 END
-        test_tar_gz_url_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config)
+        test_tar_gz_url_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
       it 'from string with store key' do
         custom_store = '../custom_store'
@@ -279,7 +279,7 @@ bricks:
     version: 0.0.1
     location: https://github.com/dmorrill10/mortar/archive/master.tar.gz
 END
-        test_tar_gz_url_config Mortar::Config.new(BRICK_STORE).parse(test_brickfile_config), custom_store
+        test_tar_gz_url_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config), custom_store
       end
     end
 
