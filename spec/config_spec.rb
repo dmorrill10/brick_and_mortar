@@ -61,7 +61,6 @@ def test_tar_gz_url_config(patient, brick_store = BRICK_STORE)
   File.basename(patient[0].destination).must_equal 'mortar-0.0.1'
   patient[0].destination.must_equal File.join(brick_store, 'mortar-0.0.1')
   patient[0].exists?.must_equal false
-  skip
   patient[0].create!
   patient[0].exists?.must_equal true
 end
@@ -268,18 +267,6 @@ END
   location: https://github.com/dmorrill10/mortar/archive/master.tar.gz
 END
         test_tar_gz_url_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
-      end
-      it 'from string with store key' do
-        custom_store = '../custom_store'
-        test_brickfile_config = <<-END
-store: #{custom_store}
-bricks:
-  -
-    name: mortar
-    version: 0.0.1
-    location: https://github.com/dmorrill10/mortar/archive/master.tar.gz
-END
-        test_tar_gz_url_config Mortar::Config.new(BRICK_STORE).parse!(test_brickfile_config), custom_store
       end
     end
 

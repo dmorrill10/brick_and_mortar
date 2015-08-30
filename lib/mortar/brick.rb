@@ -7,6 +7,8 @@ require 'contextual_exceptions'
 module Mortar
   module Brick
     class Location
+      using ContextualExceptions::ClassRefinement
+      exceptions :no_path_or_url_provided, :unrecognized_format
       attr_reader :method, :path, :format
 
       FORMATS = {:plain => 'plain', :zip => 'zip', :tar_gz => 'tar.gz'}
@@ -52,15 +54,19 @@ module Mortar
         else
           @path
         end
+
         @method = data['method'] if data['method']
         @format = data['format'] if data['format']
 
-        fail 'Must have a path or URL' unless @path
+        fail NoPathOrUrlProvided.new('Must have a path or URL') unless @path
+        unless FORMATS.values.include?(@format)
+          fail UnrecognizedFormat.new("Unrecognized format: #{@format}. Recognized formats: #{FORMATS}.")
+        end
       end
     end
     class Config
       using ContextualExceptions::ClassRefinement
-      exceptions :unrecognized_retrieval_method
+      exceptions :unrecognized_retrieval_method, :unrecognized_format
 
       attr_reader :name, :version, :location, :destination
 
@@ -71,7 +77,11 @@ module Mortar
         @destination = File.join(brick_store, name_with_version)
 
         @creation_closure = if exists?
-          puts "Using #{name_with_version} in #{@destination}" if verbose
+          if verbose
+            -> { puts "Using #{name_with_version} in #{@destination}" }
+          else
+            -> {}
+          end
         else
           case @location.method
           when 'git'
@@ -93,10 +103,19 @@ module Mortar
               if verbose
                 puts "Installing #{@name_with_version} to #{@destination} from #{@location.path}"
               end
-              Download.get_and_unpack_zip(@location.path, @destination)
+              if @location.format == Location::FORMATS[:zip]
+                Download.get_and_unpack_zip(@location.path, @destination)
+              elsif
+                if @location.format == Location::FORMATS[:tar_gz]
+                  Download.get_and_unpack_tar_gz(@location.path, @destination)
+                end
+              else
+                ap @location.format
+                raise UnrecognizedFormat.new(@location.format)
+              end
             end
           else
-            -> { raise UnrecognizedRetrievalMethod(@location.method) }
+            -> { raise UnrecognizedRetrievalMethod.new(@location.method) }
           end
         end
       end
