@@ -72,49 +72,7 @@ module BrickAndMortar
         @version = data['version']
         @location = Location.new(data['location'])
         @destination = File.join(brick_store, name_with_version)
-
-        @creation_closure = if exists?
-          if verbose
-            -> { puts "Using #{name_with_version} in #{@destination}" }
-          else
-            -> {}
-          end
-        else
-          case @location.method
-          when 'git'
-            -> do
-              if verbose
-                puts "Installing #{name_with_version} to #{@destination} from #{@location.path} with git"
-              end
-              Git.clone_repo(@location.path, @destination)
-            end
-          when 'svn'
-            -> do
-              if verbose
-                puts "Installing #{@name_with_version} to #{@destination} from #{@location.path} with svn"
-              end
-              Svn.checkout_repo(@location.path, @destination)
-            end
-          when 'download'
-            -> do
-              if verbose
-                puts "Installing #{@name_with_version} to #{@destination} from #{@location.path}"
-              end
-              if @location.format == Location::FORMATS[:zip]
-                Download.get_and_unpack_zip(@location.path, @destination)
-              elsif
-                if @location.format == Location::FORMATS[:tar_gz]
-                  Download.get_and_unpack_tar_gz(@location.path, @destination)
-                end
-              else
-                ap @location.format
-                raise UnrecognizedFormat.new(@location.format)
-              end
-            end
-          else
-            -> { raise UnrecognizedRetrievalMethod.new(@location.method) }
-          end
-        end
+        @verbose = verbose
       end
 
       def name_with_version
@@ -128,7 +86,39 @@ module BrickAndMortar
       alias_method :exist?, :exists?
 
       def create!
-        @creation_closure.call
+        if exists?
+          if @verbose
+            puts "Using #{name_with_version} in #{@destination}"
+          end
+        else
+          case @location.method
+          when 'git'
+            if @verbose
+              puts "Installing #{name_with_version} to #{@destination} from #{@location.path} with git"
+            end
+            Git.clone_repo(@location.path, @destination)
+          when 'svn'
+            if @verbose
+              puts "Installing #{@name_with_version} to #{@destination} from #{@location.path} with svn"
+            end
+            Svn.checkout_repo(@location.path, @destination)
+          when 'download'
+            if @verbose
+              puts "Installing #{@name_with_version} to #{@destination} from #{@location.path}"
+            end
+            if @location.format == Location::FORMATS[:zip]
+              Download.get_and_unpack_zip(@location.path, @destination)
+            elsif
+              if @location.format == Location::FORMATS[:tar_gz]
+                Download.get_and_unpack_tar_gz(@location.path, @destination)
+              end
+            else
+              raise UnrecognizedFormat.new(@location.format)
+            end
+          else
+            raise UnrecognizedRetrievalMethod.new(@location.method)
+          end
+        end
       end
 
       def laid?(project_vendor_dir)
