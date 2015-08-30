@@ -1,0 +1,22 @@
+-
+  name: mortar
+  version: 0.0.1
+  location:
+    method: git
+    url: https://github.com/dmorrill10/mortar.git
+-
+  name: mortar011
+  version: 0.1.1
+  location:
+    method: git
+    url: git@github.com:dmorrill10/mortar.git
+-
+  name: mortarsvn
+  version: svn
+  location:
+    method: svn
+    url: https://github.com/dmorrill10/mortar
+-
+  name: mortarzip
+  version: zip
+  location: https://github.com/dmorrill10/mortar/archive/master.zip

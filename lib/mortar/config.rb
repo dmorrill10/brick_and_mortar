@@ -1,12 +1,66 @@
-require 'mortar/version'
+require 'fileutils'
+require 'yaml'
+
 require 'mortar/brick'
-require 'mortar/download'
-require 'mortar/project'
-require 'mortar/config'
-require 'mortar/git'
-require 'mortar/svn'
 
 module Mortar
+  class Config
+    attr_accessor :store
+
+    def initialize(store_)
+      @store = store_
+    end
+
+    def store_exists?
+      Dir.exist? @store
+    end
+
+    def create_store!
+      unless store_exists?
+        FileUtils.mkpath @store
+        fail "Could not create store at \"#{@store}\"" unless store_exists?
+      end
+    end
+
+    def destroy_store!
+      FileUtils.rm_rf @store
+    end
+
+    alias_method :store_exist?, :store_exists?
+
+    def parse_data(brick_data, store_ = @store)
+      brick_data.map do |brick|
+        Brick::Config.new(brick, store_)
+      end
+    end
+
+    def bricks_and_store_from_data(data)
+      store_ = @store
+      begin
+        brick_data = if data['store'] && !data['store'].empty?
+          store_ = data['store']
+          data['bricks']
+        elsif data['bricks']
+          data['bricks']
+        else
+          []
+        end
+      rescue TypeError
+        brick_data = data
+      end
+      [brick_data, store_]
+    end
+
+    def parse(yaml)
+      brick_data, store_ = bricks_and_store_from_data YAML.load(yaml)
+      parse_data brick_data, store_
+    end
+
+    def parse_file(yaml_file)
+      brick_data, store_ = bricks_and_store_from_data YAML.load_file(yaml_file)
+      parse_data brick_data, store_
+    end
+  end
 end
 
 # @todo This should be helpful

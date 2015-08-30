@@ -11,6 +11,7 @@ begin
       obj.awesome_inspect
     end
   end
+  require "pry"
 rescue LoadError
 end
 

@@ -2,6 +2,8 @@ require_relative 'git'
 require_relative 'svn'
 require_relative 'download'
 
+require 'contextual_exceptions'
+
 module Mortar
   module Brick
     class Location
@@ -57,58 +59,50 @@ module Mortar
       end
     end
     class Config
+      using ContextualExceptions::ClassRefinement
+      exceptions :unrecognized_retrieval_method
+
       attr_reader :name, :version, :location, :destination
 
       def initialize(data, brick_store, verbose = true)
         @name = data['name']
         @version = data['version']
         @location = Location.new(data['location'])
-        name_with_version = "#{@name}-#{@version}"
         @destination = File.join(brick_store, name_with_version)
 
-        @creation_closure = case @location.method
-        when 'git'
-          -> do
-            if !exists?
+        @creation_closure = if exists?
+          puts "Using #{name_with_version} in #{@destination}" if verbose
+        else
+          case @location.method
+          when 'git'
+            -> do
               if verbose
                 puts "Installing #{name_with_version} to #{@destination} from #{@location.path} with git"
               end
               Git.clone_repo(@location.path, @destination)
-            else
-              if verbose
-                puts "Using #{name_with_version} in #{@destination}"
-              end
             end
-          end
-        when 'svn'
-          -> do
-            if !exists?
+          when 'svn'
+            -> do
               if verbose
                 puts "Installing #{@name_with_version} to #{@destination} from #{@location.path} with svn"
               end
               Svn.checkout_repo(@location.path, @destination)
-            else
-              if verbose
-                puts "Using #{@name_with_version} in #{@destination}"
-              end
             end
-          end
-        when 'download'
-          -> do
-            if !exists?
+          when 'download'
+            -> do
               if verbose
                 puts "Installing #{@name_with_version} to #{@destination} from #{@location.path}"
               end
               Download.get_and_unpack_zip(@location.path, @destination)
-            else
-              if verbose
-                puts "Using #{@name_with_version} in #{@destination}"
-              end
             end
+          else
+            -> { raise UnrecognizedRetrievalMethod(@location.method) }
           end
-        else
-          -> {}
         end
+      end
+
+      def name_with_version
+        "#{@name}-#{@version}"
       end
 
       def exists?
@@ -119,6 +113,15 @@ module Mortar
 
       def create!
         @creation_closure.call
+      end
+
+      def laid?(project_vendor_dir)
+        File.exist? File.join(project_vendor_dir, name)
+      end
+
+      def lay!(project_vendor_dir)
+        create!
+        File.symlink @destination, File.join(project_vendor_dir, name)
       end
 
       def destroy!
