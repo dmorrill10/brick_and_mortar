@@ -140,7 +140,9 @@ module Mortar
 
       def lay!(project_vendor_dir)
         create!
-        File.symlink @destination, File.join(project_vendor_dir, name)
+        unless laid?(project_vendor_dir)
+          File.symlink @destination, File.join(project_vendor_dir, name)
+        end
       end
 
       def destroy!
