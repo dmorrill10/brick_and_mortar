@@ -1,4 +1,10 @@
 require 'open-uri'
+# Thanks to WinstonYW
+# http://winstonyw.com/2013/10/02/openuris_open_tempfile_and_stringio/
+# for this.
+# Don't allow downloaded files to be created as StringIO. Force a tempfile to be created.
+OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
+OpenURI::Buffer.const_set 'StringMax', 0
 require 'zip'
 require 'zlib'
 require 'rubygems/package'
@@ -33,7 +39,7 @@ module Mortar
     # for this
     def self.deflate_tar_gz(tar_gz_archive, destination = Dir.pwd)
       first_directory = nil
-      Gem::Package::TarReader.new( Zlib::GzipReader.open tar_gz_archive ) do |tar|
+      Gem::Package::TarReader.new(Zlib::GzipReader.open(tar_gz_archive)) do |tar|
         dest = nil
         tar.each do |entry|
           if entry.full_name == TAR_LONGLINK

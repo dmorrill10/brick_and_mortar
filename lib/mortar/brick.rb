@@ -26,13 +26,24 @@ module Mortar
       alias_method :url, :path
 
       def initialize(data)
-        if data['path'] && !data['path'].empty? && data['url'] && data['url'].empty?
-          fail "Path was specified as \"#{data['path']}\", but url was specified as \"#{data['url']}\". Only one can be defined at a time."
-        end
-
         @format = FORMATS[:plain]
-
-        if data.respond_to?(:match)
+        if data.respond_to?(:keys)
+          if data['path'] && !data['path'].empty? && data['url'] && data['url'].empty?
+            fail "Path was specified as \"#{data['path']}\", but url was specified as \"#{data['url']}\". Only one can be defined at a time."
+          end
+          @path = if data['path']
+            @method = 'copy'
+            @format = self.class().url_to_format(data['path'])
+            data['path']
+          elsif data['url']
+            @format = self.class().url_to_format(data['url'])
+            data['url']
+          else
+            @path
+          end
+          @method = data['method'] if data['method']
+          @format = data['format'] if data['format']
+        else
           if data.match(/^\s*svn:/)
             @method = 'svn'
           elsif data.match(/^\s*git:/) || data.match(/\.git\s*$/)
@@ -43,20 +54,6 @@ module Mortar
           @path = data
           @format = self.class().url_to_format(data)
         end
-
-        @path = if data['path']
-          @method = 'copy'
-          @format = self.class().url_to_format(data['path'])
-          data['path']
-        elsif data['url']
-          @format = self.class().url_to_format(data['url'])
-          data['url']
-        else
-          @path
-        end
-
-        @method = data['method'] if data['method']
-        @format = data['format'] if data['format']
 
         fail NoPathOrUrlProvided.new('Must have a path or URL') unless @path
         unless FORMATS.values.include?(@format)
