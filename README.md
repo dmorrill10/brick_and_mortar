@@ -10,9 +10,7 @@ Many programming environments have dependency managers for their own libraries, 
 
 It is not nearly as fancy a tool as *Bundler* or the like that does dependency conflict checking and automated updates. Instead, it seeks to do one much less ambitious, but nonetheless extremely useful job:
 
-**Ensure that all specified dependencies, from here on called *bricks*, are linked or copied into the project's `vendor` directory, recursively.**
-
-Its possible that there are tools in existence that do exactly this, but I have been unable to find them as of yet. Feel free to point me to them.
+**Ensure that all specified dependencies, from here on called *bricks*, are linked or copied (not yet implemented) into the project's `vendor` directory, recursively (not yet implemented).**
 
 
 Supported Systems
@@ -24,14 +22,14 @@ Currently only targeted for Linux, and only tested on Ubuntu.
 Requirements
 ------------
 
-- Ruby (>= 1.8.7)
+- Ruby (>= 2)
 
 
 Usage
 -----
 
 1. Install `brick_and_mortar` gem with `gem install brick_and_mortar`
-2. Write a `Brickfile.yml` in your project's root directory that has the following fields:
+2. Write a `Brickfile` in your project's root directory that has the following fields:
   
   `name`
   ~   The name of the dependency. The directory or link that will be present in the `vendor` directory will have this name.
@@ -42,11 +40,13 @@ Usage
   `location`
   ~   Location of the brick. Either local system path, version control repository (*Git*, *Mercurial*, and *Subversion* currently supported), or URL.
 
-3. Run `brick_and_mortar lay` to install bricks to `vendor`, downloading them if necessary to `$BRICK_STORE_PREFIX/.brick_store`.
+3. Run `mortar` to install bricks to `vendor`, downloading them if necessary to `$BRICK_STORE_PREFIX/.brick_store`.
 
 
 Settings
 --------
+
+(None of this is implemented yet).
 
 Write a `$HOME/.brick_and_mortarrc` file to specify:
 
