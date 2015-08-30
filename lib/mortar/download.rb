@@ -47,6 +47,11 @@ module Mortar
             first_directory = dest unless first_directory
           elsif entry.file?
             FileUtils.rm_rf dest unless File.file? dest
+            dir = File.dirname dest
+            unless File.exist?(dir)
+              FileUtils.mkpath dir
+              first_directory = dir unless first_directory
+            end
             File.open dest, "wb" do |f|
               f.print entry.read
             end
@@ -55,6 +60,11 @@ module Mortar
               puts "WARNING: File \"#{dest}\" created before a root directory"
             end
           elsif entry.header.typeflag == '2' #Symlink!
+            dir = File.dirname dest
+            unless File.exist?(dir)
+              FileUtils.mkpath dir
+              first_directory = dir unless first_directory
+            end
             File.symlink entry.header.linkname, dest
             unless first_directory
               puts "WARNING: Symlink \"#{dest}\" to \"#{entry.header.linkname}\" created before a root directory"
