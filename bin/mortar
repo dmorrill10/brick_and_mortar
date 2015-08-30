@@ -3,39 +3,37 @@
 require 'optparse'
 require 'mortar'
 
-if $0 == __FILE__
-  options = {}
-  OptionParser.new do |opts|
-    opts.banner = "Usage: #{__FILE__} [options]"
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{__FILE__} [options]"
 
-    opts.on("-h", "--help", "Show this message") do
-      puts opts
-      exit
-    end
-
-    options[:brickfile] = File.join(Dir.pwd, 'Brickfile')
-    opts.on(
-      "-f",
-      "--brickfile [Brickfile name]",
-      "Lay the bricks specified in this Brickfile. Defaults to \"#{options[:brickfile]}\""
-    ) do |x|
-      options[:brickfile] = x unless x.nil?
-    end
-
-    options[:brick_store] = Mortar::Project::DEFAULT_BRICK_STORE
-    opts.on(
-      "-s",
-      "--store [brick store path]",
-      "Store bricks here. Defaults to \"#{options[:brick_store]}\""
-    ) do |x|
-      options[:brick_store] = x unless x.nil?
-    end
-  end.parse!
-
-  unless File.file?(options[:brickfile])
-    puts "#{options[:brickfile]} does not exist. Please create a Brickfile before trying to lay bricks for this project."
-    exit 1
+  opts.on("-h", "--help", "Show this message") do
+    puts opts
+    exit
   end
-  project = Mortar::Project.new options[:brickfile], options[:brick_store]
-  project.lay!
+
+  options[:brickfile] = File.join(Dir.pwd, 'Brickfile')
+  opts.on(
+    "-f",
+    "--brickfile [Brickfile name]",
+    "Lay the bricks specified in this Brickfile. Defaults to \"#{options[:brickfile]}\""
+  ) do |x|
+    options[:brickfile] = x unless x.nil?
+  end
+
+  options[:brick_store] = Mortar::Project::DEFAULT_BRICK_STORE
+  opts.on(
+    "-s",
+    "--store [brick store path]",
+    "Store bricks here. Defaults to \"#{options[:brick_store]}\""
+  ) do |x|
+    options[:brick_store] = x unless x.nil?
+  end
+end.parse!
+
+unless File.file?(options[:brickfile])
+  puts "#{options[:brickfile]} does not exist. Please create a Brickfile before trying to lay bricks for this project."
+  exit 1
 end
+project = Mortar::Project.new options[:brickfile], options[:brick_store]
+project.lay!
