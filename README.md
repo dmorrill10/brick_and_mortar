@@ -10,7 +10,7 @@ Many programming environments have dependency managers for their own libraries, 
 
 It is not nearly as fancy a tool as *Bundler* or the like that does dependency conflict checking and automated updates. Instead, it seeks to do one much less ambitious, but nonetheless extremely useful job:
 
-**Ensure that all specified dependencies, from here on called *bricks*, are linked or copied (not yet implemented) into the project's `vendor` directory, recursively (not yet implemented).**
+**Ensure that all specified dependencies, from here on called *bricks*, are linked or copied (not yet implemented) into the project's `vendor` directory, recursively.**
 
 
 Supported Systems
@@ -22,7 +22,7 @@ Currently only targeted for Linux, and only tested on Ubuntu.
 Requirements
 ------------
 
-- Ruby (>= 2)
+- Ruby (>= 2.1)
 
 
 Usage

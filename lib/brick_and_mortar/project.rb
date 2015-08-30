@@ -27,7 +27,16 @@ module BrickAndMortar
 
     def lay!
       FileUtils.mkpath vendor
-      @bricks.each { |b| b.lay! vendor }
+      @bricks.each do |b|
+        b.lay! vendor
+        sub_brickfile = File.join(b.destination, 'Brickfile')
+        if File.file?(sub_brickfile)
+          Dir.chdir(b.destination) do |dir|
+            subproject = Project.new(sub_brickfile, @config.store)
+            subproject.lay!
+          end
+        end
+      end
     end
   end
 end
