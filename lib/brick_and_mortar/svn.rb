@@ -1,4 +1,4 @@
-module Mortar
+module BrickAndMortar
   module Svn
     def self.checkout_repo(url, name = nil, options = {})
       unless name

@@ -1,6 +1,6 @@
 - 
-  name: mortar
+  name: brick_and_mortar
   version: 0.0.1
   location: 
     method: git
-    url: git@github.com:dmorrill10/mortar.git 
+    url: git@github.com:dmorrill10/brick_and_mortar.git 

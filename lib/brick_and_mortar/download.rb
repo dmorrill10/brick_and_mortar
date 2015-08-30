@@ -9,7 +9,7 @@ require 'zip'
 require 'zlib'
 require 'rubygems/package'
 
-module Mortar
+module BrickAndMortar
   module Download
     TAR_LONGLINK = '././@LongLink'
 

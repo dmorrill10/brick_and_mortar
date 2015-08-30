@@ -1,19 +1,19 @@
 require_relative 'support/spec_helper'
 
-require_relative '../lib/mortar/download'
+require_relative '../lib/brick_and_mortar/download'
 
-describe Mortar::Download do
+describe BrickAndMortar::Download do
   describe 'given zip url brick configuration' do
     zip_url_brick_configruation = MockBrickConfiguration.new(
       'mock_brick',
       '0.0.1',
-      MockBrickLocation.new('download', 'https://github.com/dmorrill10/mortar/archive/master.zip')
+      MockBrickLocation.new('download', 'https://github.com/dmorrill10/brick_and_mortar/archive/master.zip')
     )
 
     it 'downloads the brick' do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do |d|
-          Mortar::Download.get_and_unpack_zip(zip_url_brick_configruation.location.url, zip_url_brick_configruation.destination)
+          BrickAndMortar::Download.get_and_unpack_zip(zip_url_brick_configruation.location.url, zip_url_brick_configruation.destination)
           File.directory?(File.join(dir, zip_url_brick_configruation.destination)).must_equal true
         end
       end
@@ -23,13 +23,13 @@ describe Mortar::Download do
     tar_gz_url_brick_configruation = MockBrickConfiguration.new(
       'mock_brick',
       '0.0.1',
-      MockBrickLocation.new('download', 'https://github.com/dmorrill10/mortar/archive/master.tar.gz')
+      MockBrickLocation.new('download', 'https://github.com/dmorrill10/brick_and_mortar/archive/master.tar.gz')
     )
 
     it 'downloads the brick' do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do |d|
-          Mortar::Download.get_and_unpack_tar_gz(tar_gz_url_brick_configruation.location.url, tar_gz_url_brick_configruation.destination)
+          BrickAndMortar::Download.get_and_unpack_tar_gz(tar_gz_url_brick_configruation.location.url, tar_gz_url_brick_configruation.destination)
           File.directory?(File.join(dir, tar_gz_url_brick_configruation.destination)).must_equal true
         end
       end

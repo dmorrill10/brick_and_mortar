@@ -1,11 +1,11 @@
 require_relative 'support/spec_helper'
 
-require_relative '../lib/mortar/project'
+require_relative '../lib/brick_and_mortar/project'
 require_relative 'support/network_mocks'
 
 BRICK_STORE = File.expand_path('../.test_brick_store', __FILE__)
 
-describe Mortar::Project do
+describe BrickAndMortar::Project do
   let(:project_root) { File.expand_path('../support/test_files/test_project', __FILE__) }
   let(:project_vendor) { File.join(project_root, 'vendor') }
 
@@ -20,7 +20,7 @@ describe Mortar::Project do
   end
 
   let(:brickfile) { File.join(project_root, 'Brickfile') }
-  let(:patient) { Mortar::Project.new(brickfile, BRICK_STORE) }
+  let(:patient) { BrickAndMortar::Project.new(brickfile, BRICK_STORE) }
 
   it 'creates a vendor directory with all bricks linked' do
     File.exist?(project_vendor).must_equal false

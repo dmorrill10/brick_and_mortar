@@ -1,22 +1,22 @@
 -
-  name: mortar
+  name: brick_and_mortar
   version: 0.0.1
   location:
     method: git
-    url: https://github.com/dmorrill10/mortar.git
+    url: https://github.com/dmorrill10/brick_and_mortar.git
 -
-  name: mortar011
+  name: brick_and_mortar011
   version: 0.1.1
   location:
     method: git
-    url: git@github.com:dmorrill10/mortar.git
+    url: git@github.com:dmorrill10/brick_and_mortar.git
 -
-  name: mortarsvn
+  name: brick_and_mortarsvn
   version: svn
   location:
     method: svn
-    url: https://github.com/dmorrill10/mortar
+    url: https://github.com/dmorrill10/brick_and_mortar
 -
-  name: mortarzip
+  name: brick_and_mortarzip
   version: zip
-  location: https://github.com/dmorrill10/mortar/archive/master.zip
+  location: https://github.com/dmorrill10/brick_and_mortar/archive/master.zip

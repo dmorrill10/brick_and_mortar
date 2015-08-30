@@ -1,7 +1,7 @@
 require 'fileutils'
-require 'mortar/config'
+require 'brick_and_mortar/config'
 
-module Mortar
+module BrickAndMortar
   class Project
     attr_reader :project_root, :config, :bricks
 

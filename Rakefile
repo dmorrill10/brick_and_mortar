@@ -2,7 +2,7 @@ require 'bundler/gem_tasks'
 require 'rake'
 require 'rake/clean'
 
-require_relative 'lib/mortar/version'
+require_relative 'lib/brick_and_mortar/version'
 
 desc 'Test gem'
 task default: [:test]

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'mortar'
+require 'brick_and_mortar'
 
 options = {}
 OptionParser.new do |opts|
@@ -21,7 +21,7 @@ OptionParser.new do |opts|
     options[:brickfile] = x unless x.nil?
   end
 
-  options[:brick_store] = Mortar::Project::DEFAULT_BRICK_STORE
+  options[:brick_store] = BrickAndMortar::Project::DEFAULT_BRICK_STORE
   opts.on(
     "-s",
     "--store [brick store path]",
@@ -35,5 +35,5 @@ unless File.file?(options[:brickfile])
   puts "#{options[:brickfile]} does not exist. Please create a Brickfile before trying to lay bricks for this project."
   exit 1
 end
-project = Mortar::Project.new options[:brickfile], options[:brick_store]
+project = BrickAndMortar::Project.new options[:brickfile], options[:brick_store]
 project.lay!

@@ -1,4 +1,4 @@
-module Mortar
+module BrickAndMortar
   def self.create_directory!(url, name = nil)
     unless name
       name = File.basename(url, File.extname(url))
@@ -7,15 +7,15 @@ module Mortar
   end
   module Download
     def self.get_and_unpack_zip(url, name = nil, options = {})
-      Mortar::create_directory! url, name
+      BrickAndMortar::create_directory! url, name
     end
     def self.get_and_unpack_tar_gz(url, name = nil, options = {})
-      Mortar::create_directory! url, name
+      BrickAndMortar::create_directory! url, name
     end
   end
   module Git
     def self.clone_repo(url, name = nil, options = {})
-      Mortar::create_directory! url, name
+      BrickAndMortar::create_directory! url, name
     end
   end
   module Svn

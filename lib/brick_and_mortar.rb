@@ -1,12 +1,12 @@
-require 'mortar/version'
-require 'mortar/brick'
-require 'mortar/download'
-require 'mortar/project'
-require 'mortar/config'
-require 'mortar/git'
-require 'mortar/svn'
+require 'brick_and_mortar/version'
+require 'brick_and_mortar/brick'
+require 'brick_and_mortar/download'
+require 'brick_and_mortar/project'
+require 'brick_and_mortar/config'
+require 'brick_and_mortar/git'
+require 'brick_and_mortar/svn'
 
-module Mortar
+module BrickAndMortar
 end
 
 # @todo This should be helpful

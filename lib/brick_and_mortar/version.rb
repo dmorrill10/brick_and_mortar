@@ -1,3 +1,3 @@
-module Mortar
+module BrickAndMortar
   VERSION = '0.0.1'
 end

@@ -4,7 +4,7 @@ require_relative 'download'
 
 require 'contextual_exceptions'
 
-module Mortar
+module BrickAndMortar
   module Brick
     class Location
       using ContextualExceptions::ClassRefinement

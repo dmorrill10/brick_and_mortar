@@ -1,12 +1,12 @@
-Mortar: A Solid Foundation for Software Projects
+BrickAndMortar: A Solid Foundation for Software Projects
 ================================================
 
-What is Mortar?
+What is BrickAndMortar?
 ---------------
 
 Many programming environments have dependency managers for their own libraries, such as *Bundler* for Ruby, *Pip* for Python, *Node Package Manager* for Node, and others. A problem arises however, if one needs to use packages from many environments, those that are in any dependency manager's library, or those written in languages that lack widespread dependency manager support such as C and C++.
 
-**Mortar** is a meant to fill this gap and be a catch-all dependency manager for these projects that require a little extra glue to hold their foundation together.
+**BrickAndMortar** is a meant to fill this gap and be a catch-all dependency manager for these projects that require a little extra glue to hold their foundation together.
 
 It is not nearly as fancy a tool as *Bundler* or the like that does dependency conflict checking and automated updates. Instead, it seeks to do one much less ambitious, but nonetheless extremely useful job:
 
@@ -30,7 +30,7 @@ Requirements
 Usage
 -----
 
-1. Install `mortar` gem with `gem install mortar`
+1. Install `brick_and_mortar` gem with `gem install brick_and_mortar`
 2. Write a `Brickfile.yml` in your project's root directory that has the following fields:
   
   `name`
@@ -42,13 +42,13 @@ Usage
   `location`
   ~   Location of the brick. Either local system path, version control repository (*Git*, *Mercurial*, and *Subversion* currently supported), or URL.
 
-3. Run `mortar lay` to install bricks to `vendor`, downloading them if necessary to `$BRICK_STORE_PREFIX/.brick_store`.
+3. Run `brick_and_mortar lay` to install bricks to `vendor`, downloading them if necessary to `$BRICK_STORE_PREFIX/.brick_store`.
 
 
 Settings
 --------
 
-Write a `$HOME/.mortarrc` file to specify:
+Write a `$HOME/.brick_and_mortarrc` file to specify:
 
 `BRICK_STORE_PREFIX`
 ~   The directory that contains `.brick_store`. As the name suggests, `.brick_store` is where all bricks will be stored before they are linked or copied into the `vendor` directories of individual projects.

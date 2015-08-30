@@ -1,14 +1,14 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'mortar/version'
+require 'brick_and_mortar/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'mortar'
-  spec.version       = Mortar::VERSION
+  spec.name          = 'brick_and_mortar'
+  spec.version       = BrickAndMortar::VERSION
   spec.authors       = ['Dustin Morrill']
   spec.email         = ['dmorrill10@gmail.com']
-  spec.summary       = 'Mortar: A Solid Foundation for Software Projects'
+  spec.summary       = 'BrickAndMortar: A Solid Foundation for Software Projects'
   spec.description   = ''
   spec.homepage      = ''
   spec.license       = 'MIT'

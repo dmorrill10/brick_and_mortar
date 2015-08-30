@@ -1,6 +1,6 @@
 require 'git'
 
-module Mortar
+module BrickAndMortar
   module Git
     def self.clone_repo(url, name = nil, options = {})
       unless name

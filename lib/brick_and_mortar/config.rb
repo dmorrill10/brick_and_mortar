@@ -1,9 +1,9 @@
 require 'fileutils'
 require 'yaml'
 
-require 'mortar/brick'
+require 'brick_and_mortar/brick'
 
-module Mortar
+module BrickAndMortar
   class Config
     attr_accessor :store
 
