@@ -2,13 +2,13 @@ require_relative 'git'
 require_relative 'svn'
 require_relative 'download'
 
-require 'contextual_exceptions'
-
 module BrickAndMortar
   module Brick
     class Location
-      using ContextualExceptions::ClassRefinement
-      exceptions :no_path_or_url_provided, :unrecognized_format
+      class NoPathOrUrlProvided < RuntimeError
+      end
+      class UnrecognizedFormat < RuntimeError
+      end
       attr_reader :method, :path, :format
 
       FORMATS = {:plain => 'plain', :zip => 'zip', :tar_gz => 'tar.gz'}
@@ -62,8 +62,10 @@ module BrickAndMortar
       end
     end
     class Config
-      using ContextualExceptions::ClassRefinement
-      exceptions :unrecognized_retrieval_method, :unrecognized_format
+      class UnrecognizedRetrievalMethod < RuntimeError
+      end
+      class UnrecognizedFormat < RuntimeError
+      end
 
       attr_reader :name, :version, :location, :destination
 

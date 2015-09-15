@@ -22,7 +22,7 @@ Currently only targeted for Linux, and only tested on Ubuntu.
 Requirements
 ------------
 
-- Ruby (>= 2.1)
+- Ruby (>= 2.0, 1.9 might work as well but it has not been tested yet)
 
 
 Usage
