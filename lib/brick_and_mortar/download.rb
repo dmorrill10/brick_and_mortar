@@ -8,6 +8,7 @@ OpenURI::Buffer.const_set 'StringMax', 0
 require 'zip'
 require 'zlib'
 require 'rubygems/package'
+require 'bzip2/ffi'
 
 module BrickAndMortar
   module Download
@@ -37,9 +38,9 @@ module BrickAndMortar
     # Thanks to TomCZ
     # http://stackoverflow.com/questions/856891/unzip-zip-tar-tag-gz-files-with-ruby
     # for this
-    def self.deflate_tar_gz(tar_gz_archive, destination = Dir.pwd)
+    def self.deflate_tar(tar_string, destination = Dir.pwd)
       first_directory = nil
-      Gem::Package::TarReader.new(Zlib::GzipReader.open(tar_gz_archive)) do |tar|
+      Gem::Package::TarReader.new(tar_string) do |tar|
         dest = nil
         tar.each do |entry|
           if entry.full_name == TAR_LONGLINK
@@ -81,6 +82,21 @@ module BrickAndMortar
       end
       first_directory
     end
+    def self.deflate_tar_gz(tar_gz_archive, destination = Dir.pwd)
+      deflate_tar(Zlib::GzipReader.open(tar_gz_archive), destination)
+    end
+    def self.deflate_tar_bz2(archive, destination = Dir.pwd)
+      Bzip2::FFI::Reader.open(archive) do |reader|
+        File.open("#{destination}.tar", 'w') do |tar|
+          tar.write reader.read
+        end
+      end
+      first_directory = File.open("#{destination}.tar", 'r') do |tar|
+        deflate_tar(tar)
+      end
+      FileUtils.rm "#{destination}.tar"
+      first_directory
+    end
     def self.get_and_unpack_zip(url, name = nil, options = {})
       unless name
         name = name_from_path url
@@ -93,6 +109,13 @@ module BrickAndMortar
         name = name_from_path url
       end
       uncompressed_dir_name = deflate_tar_gz(open(url))
+      FileUtils.mv uncompressed_dir_name, name
+    end
+    def self.get_and_unpack_tar_bz2(url, name = nil, options = {})
+      unless name
+        name = name_from_path url
+      end
+      uncompressed_dir_name = deflate_tar_bz2(open(url))
       FileUtils.mv uncompressed_dir_name, name
     end
   end

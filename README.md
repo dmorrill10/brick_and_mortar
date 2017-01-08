@@ -1,6 +1,8 @@
 BrickAndMortar: A Solid Foundation for Software Projects
 ================================================
 
+[![Build Status](https://travis-ci.org/dmorrill10/brick_and_mortar.svg?branch=master)](https://travis-ci.org/dmorrill10/brick_and_mortar)
+
 What is BrickAndMortar?
 ---------------
 
@@ -16,7 +18,7 @@ It is not nearly as fancy a tool as *Bundler* or the like that does dependency c
 Supported Systems
 -----------------
 
-Currently only targeted for Linux, and only tested on Ubuntu.
+Currently only targeted for *nix. Tested on Ubuntu and Mac OS X.
 
 
 Requirements
@@ -30,7 +32,7 @@ Usage
 
 1. Install `brick_and_mortar` gem with `gem install brick_and_mortar`
 2. Write a `Brickfile` in your project's root directory that has the following fields:
-  
+
   `name`
   ~   The name of the dependency. The directory or link that will be present in the `vendor` directory will have this name.
 
@@ -38,7 +40,7 @@ Usage
   ~   The version of the brick as a string in whatever format is natural for it. This will be appended to the directory name of the copy of the brick downloaded in the `$BRICK_STORE_PREFIX/.brick_store` directory.
 
   `location`
-  ~   Location of the brick. Either local system path, version control repository (*Git*, *Mercurial*, and *Subversion* currently supported), or URL.
+  ~   Location of the brick. Either local system path, version control repository (*Git*, *Mercurial*, and *Subversion* currently supported), or URL. *zip*, *tar.gz*, and *tar.bz2* are the only currently supported compressed URL package formats.
 
 3. Run `mortar` to install bricks to `vendor`, downloading them if necessary to `$BRICK_STORE_PREFIX/.brick_store`.
 
@@ -54,8 +56,8 @@ Write a `$HOME/.brick_and_mortarrc` file to specify:
 ~   The directory that contains `.brick_store`. As the name suggests, `.brick_store` is where all bricks will be stored before they are linked or copied into the `vendor` directories of individual projects.
 
 `DEFAULT_BRICK_SHARING_POLICY`
-~   Specify the default behavior when placing bricks in projects. Accepts either 
-    - `copy`, where the brick will be copied into `vendor`, or 
+~   Specify the default behavior when placing bricks in projects. Accepts either
+    - `copy`, where the brick will be copied into `vendor`, or
     - `link`, where the brick will be symbolically linked into `vendor`.
     Defaults to `link`.
 
@@ -63,6 +65,6 @@ Write a `$HOME/.brick_and_mortarrc` file to specify:
 License
 -------
 
-Copyright Dustin Morrill, 2015
+Copyright Dustin Morrill, 2015-2017
 
 MIT License

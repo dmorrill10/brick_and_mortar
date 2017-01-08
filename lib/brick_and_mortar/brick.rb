@@ -11,13 +11,20 @@ module BrickAndMortar
       end
       attr_reader :method, :path, :format
 
-      FORMATS = {:plain => 'plain', :zip => 'zip', :tar_gz => 'tar.gz'}
+      FORMATS = {
+        :plain => 'plain',
+        :zip => 'zip',
+        :tar_gz => 'tar.gz',
+        :tar_bz2 => 'tar.bz2'
+      }
 
       def self.url_to_format(url)
-        if url.match(/\.zip$/)
+        if url.match(/\.#{FORMATS[:zip]}$/)
           FORMATS[:zip]
-        elsif url.match(/\.tar.gz$/)
+        elsif url.match(/\.#{FORMATS[:tar_gz]}$/)
           FORMATS[:tar_gz]
+        elsif url.match(/\.#{FORMATS[:tar_bz2]}$/)
+          FORMATS[:tar_bz2]
         else
           FORMATS[:plain]
         end
@@ -110,10 +117,10 @@ module BrickAndMortar
             end
             if @location.format == Location::FORMATS[:zip]
               Download.get_and_unpack_zip(@location.path, @destination)
-            elsif
-              if @location.format == Location::FORMATS[:tar_gz]
-                Download.get_and_unpack_tar_gz(@location.path, @destination)
-              end
+            elsif @location.format == Location::FORMATS[:tar_gz]
+              Download.get_and_unpack_tar_gz(@location.path, @destination)
+            elsif @location.format == Location::FORMATS[:tar_bz2]
+              Download.get_and_unpack_tar_bz2(@location.path, @destination)
             else
               raise UnrecognizedFormat.new(@location.format)
             end
