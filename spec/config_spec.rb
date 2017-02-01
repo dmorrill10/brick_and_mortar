@@ -5,6 +5,22 @@ require_relative 'support/network_mocks'
 
 BRICK_STORE = File.expand_path('../.test_brick_store', __FILE__)
 
+def test_local_config(patient)
+  patient.length.must_equal 1
+  patient[0].name.must_equal 'brick_and_mortar'
+  patient[0].version.must_equal '0.0.1'
+  patient[0].location.method.must_equal 'copy'
+  patient[0].location.format.must_equal 'plain'
+  patient[0].location.path.must_equal File.expand_path('../support/test_files/local_project', __FILE__)
+  File.basename(patient[0].destination).must_equal 'brick_and_mortar-0.0.1'
+  patient[0].destination.must_equal File.join(BRICK_STORE, 'brick_and_mortar-0.0.1')
+  patient[0].exists?.must_equal false
+  patient[0].create!
+  patient[0].exists?.must_equal true
+  patient[0].destroy!
+  patient[0].exists?.must_equal false
+end
+
 def test_git_https_config(patient)
   patient.length.must_equal 1
   patient[0].name.must_equal 'brick_and_mortar'
@@ -267,6 +283,18 @@ END
   location: https://github.com/dmorrill10/brick_and_mortar/archive/master.tar.gz
 END
         test_tar_gz_url_config BrickAndMortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
+      end
+    end
+
+    describe 'local' do
+      it 'from string' do
+        test_brickfile_config = <<-END
+-
+  name: brick_and_mortar
+  version: 0.0.1
+  location: #{File.expand_path('../support/test_files/local_project', __FILE__)}
+END
+        test_local_config BrickAndMortar::Config.new(BRICK_STORE).parse!(test_brickfile_config)
       end
     end
 

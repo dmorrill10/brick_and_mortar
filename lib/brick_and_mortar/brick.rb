@@ -57,6 +57,8 @@ module BrickAndMortar
             @method = 'git'
           elsif data.match(/^\s*https?:/)
             @method = 'download'
+          else
+            @method = 'copy'
           end
           @path = data
           @format = self.class().url_to_format(data)
@@ -124,6 +126,13 @@ module BrickAndMortar
             else
               raise UnrecognizedFormat.new(@location.format)
             end
+          when 'copy'
+            if @verbose
+              puts "Copying #{@name_with_version} to #{@destination} from #{@location.path}"
+            end
+            dir = File.dirname(@destination)
+            FileUtils.mkdir_p(dir) unless File.directory?(dir)
+            FileUtils.cp_r @location.path, @destination
           else
             raise UnrecognizedRetrievalMethod.new(@location.method)
           end
